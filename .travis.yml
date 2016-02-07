@@ -1,7 +1,12 @@
 language: python
-install: "pip install -r requirements.txt --use-mirrors"
+install:
+    - pip install -r requirements.txt --use-mirrors
+    - mkdir wkhtmltopdf
+    - wget http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-amd64.tar.bz2
+    - tar xvjf wkhtmltopdf-0.9.9-static-amd64.tar.bz2 -C wkhtmltopdf
+    - mv wkhtmltopdf/wkhtmltopdf-amd64 wkhtmltopdf/wkhtmltopdf
+    - export PATH=$PATH:$PWD/wkhtmltopdf/
 script: nosetests --nologcapture
 addons:
   apt_packages:
     - pandoc
-    - wkhtmltopdf
