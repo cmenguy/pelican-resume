@@ -1,3 +1,6 @@
 language: python
 install: "pip install -r requirements.txt --use-mirrors"
 script: nosetests --nologcapture
+addons:
+  apt_packages:
+    - pandoc
