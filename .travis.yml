@@ -4,3 +4,4 @@ script: nosetests --nologcapture
 addons:
   apt_packages:
     - pandoc
+    - wkhtmltopdf
