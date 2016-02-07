@@ -1,7 +1,7 @@
 '''
 resume
-===================================
-This plugin generates a PDF resume from a Markdown file
+==============================================================================
+This plugin generates a PDF resume from a Markdown file using customizable CSS
 '''
 
 import os
@@ -12,12 +12,16 @@ from subprocess import Popen
 
 from pelican import signals
 
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+CSS_DIR = os.path.join(CURRENT_DIR, "static", "css")
+
 logger = logging.getLogger(__name__)
 
 def set_default_settings(settings):
-    settings.setdefault("RESUME_MARKDOWN", "pages/resume.md")
+    settings.setdefault("RESUME_SRC", "pages/resume.md")
     settings.setdefault("RESUME_PDF", "pdfs/resume.pdf")
-    settings.setdefault("RESUME_CSS", None)
+    settings.setdefault("RESUME_CSS_DIR", CSS_DIR)
+    settings.setdefault("RESUME_TYPE", "moderncv")
     settings.setdefault("RESUME_PANDOC", "pandoc")
     settings.setdefault("RESUME_WKHTMLTOPDF", "wkhtmltopdf")
 
@@ -29,8 +33,10 @@ def init_default_config(pelican):
 
 def generate_pdf_resume(generator):
     path = generator.path
-    markdown = os.path.join(path, generator.settings.get("RESUME_MARKDOWN"))
-    css = generator.settings.get("RESUME_CSS")
+    output_path = generator.settings.get("OUTPUT_PATH")
+    markdown = os.path.join(path, generator.settings.get("RESUME_SRC"))
+    css_type = generator.settings.get("RESUME_TYPE")
+    css = os.path.join(generator.settings.get("RESUME_CSS_DIR"), "%s.css" % css_type)
     if not os.path.exists(markdown):
         logging.critical("Markdown resume not found under %s" % markdown)
         return
@@ -39,7 +45,10 @@ def generate_pdf_resume(generator):
     css = os.path.join(path, css) if css else css
 
     with tempfile.NamedTemporaryFile(suffix=".html") as html_output:
-        pdf_output = os.path.join(path, generator.settings.get("RESUME_PDF"))
+        pdf_output = os.path.join(output_path, generator.settings.get("RESUME_PDF"))
+        pdf_dir = os.path.dirname(pdf_output)
+        if not os.path.exists(pdf_dir):
+            os.makedirs(pdf_dir)
         pandoc = generator.settings.get("RESUME_PANDOC")
         wkhtmltopdf = generator.settings.get("RESUME_WKHTMLTOPDF")
 
