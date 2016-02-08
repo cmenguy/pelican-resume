@@ -43,6 +43,15 @@ Setting name | Default value | Usage
 `RESUME_PANDOC` | pandoc | Path to your `pandoc` command. If `pandoc` is in your `PATH`, then it can be left as default.
 `RESUME_WKHTMLTOPDF` | wkhtmltopdf | Path to your `wkhtmltopdf` command. If `wkhtmltopdf` is in your `PATH`, then it can be left as default.
 
+Usage
+=====
+
+Once you have the plugin properly configured, it will generate a PDF version of your resume automatically under the
+`RESUME_PDF` location everytime you run `pelican content`.
+
+It can then easily be embedded into your Pelican website by referencing that location - thus ensuring your visitors
+can download the latest version of your resume which is consistent with your Markdown file.
+
 Contributing
 ============
 
